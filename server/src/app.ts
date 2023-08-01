@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { config } from './config/config';
-import { connectToDatabase } from './database';
+import { connectToDatabase } from './database/database';
 import Logger from './utils/Logger';
 
 const app = express();

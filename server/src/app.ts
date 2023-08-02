@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { config } from './config/config';
 import { connectToDatabase } from './database/database';
 import Logger from './utils/Logger';
+import insuranceRouter from './routes/Insurance';
 
 const app = express();
 
@@ -44,6 +45,7 @@ const startServer = () => {
   });
 
   // Routes
+  app.use('/insurances', insuranceRouter);
 
   // Healthcheck route
   app.get('/ping', (req, res, next) => res.status(200).json({ status: 'operating' }));

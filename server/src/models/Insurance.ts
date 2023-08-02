@@ -34,10 +34,12 @@ const InsuranceSchema: Schema = new Schema({
     required: true
   },
   voucher: {
-    type: Number
+    type: Number,
+    default: null
   },
   priceMatch: {
-    type: Number
+    type: Number,
+    default: null
   },
   discounts: {
     type: [

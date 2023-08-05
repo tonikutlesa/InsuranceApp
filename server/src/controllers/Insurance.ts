@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Insurance, { IInsurance } from '../models/Insurance';
 import { calculateInsurancePrice } from '../utils/utils';
-import Logger from '../utils/Logger';
 
 const getAllInsurances = async (req: Request, res: Response) => {
   try {
@@ -25,7 +24,15 @@ const upsertInsurance = async (req: Request, res: Response) => {
         return res.status(404).json({ error: `Insurance with id ${insuranceId} not found.` });
       }
 
-      const totalPrice = calculateInsurancePrice(existingInsurance);
+      const { calculatedBasePrice, calculatedTotalPrice, calculatedDiscounts, calculatedCoverages, calculatedSurcharges } = await calculateInsurancePrice(
+        birthdate,
+        vehiclePower,
+        voucher,
+        priceMatch,
+        discounts,
+        surcharges,
+        coverages
+      );
 
       const updates: IInsurance = {
         name,
@@ -34,40 +41,52 @@ const upsertInsurance = async (req: Request, res: Response) => {
         vehiclePower,
         voucher,
         priceMatch,
-        discounts,
-        surcharges,
-        coverages,
-        totalPrice
+        discounts: calculatedDiscounts,
+        surcharges: calculatedSurcharges,
+        coverages: calculatedCoverages,
+        totalPrice: calculatedTotalPrice,
+        basePrice: calculatedBasePrice
       };
 
       const updatedInsurance = await Insurance.findOneAndUpdate({ _id: insuranceId }, updates, { new: true });
 
       return res.status(200).json({ data: updatedInsurance });
     } catch (error) {
-      return res.status(500).json({ error: 'Error while updating insurance.' });
+      return res.status(500).json({ error: error });
     }
-  }
+  } else {
+    const insurance = new Insurance({
+      _id: new mongoose.Types.ObjectId(),
+      name,
+      birthdate,
+      city,
+      vehiclePower,
+      voucher,
+      priceMatch
+    });
 
-  const insurance = new Insurance({
-    _id: new mongoose.Types.ObjectId(),
-    name,
-    birthdate,
-    city,
-    vehiclePower,
-    voucher,
-    priceMatch,
-    discounts,
-    surcharges,
-    coverages
-  });
+    const { calculatedBasePrice, calculatedTotalPrice, calculatedDiscounts, calculatedSurcharges, calculatedCoverages } = await calculateInsurancePrice(
+      birthdate,
+      vehiclePower,
+      voucher,
+      priceMatch,
+      discounts,
+      surcharges,
+      coverages
+    );
 
-  insurance.totalPrice = calculateInsurancePrice(insurance);
+    insurance.discounts = calculatedDiscounts;
+    insurance.surcharges = calculatedSurcharges;
+    insurance.coverages = calculatedCoverages;
+    insurance.basePrice = calculatedBasePrice;
+    insurance.totalPrice = calculatedTotalPrice;
 
-  try {
-    await insurance.save();
-    return res.status(201).json({ data: insurance });
-  } catch (error) {
-    return res.status(500).json({ error: 'Something went wrong.' });
+    try {
+      await insurance.save();
+      return res.status(201).json({ data: insurance });
+    } catch (error) {
+      return res.status(500).json({ error: error });
+    }
   }
 };
 

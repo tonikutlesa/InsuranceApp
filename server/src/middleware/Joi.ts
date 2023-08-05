@@ -26,8 +26,8 @@ export const Schemas = {
       birthdate: Joi.date().required(),
       city: Joi.string().required(),
       vehiclePower: Joi.number().required(),
-      voucher: Joi.number(),
-      priceMatch: Joi.number(),
+      voucher: Joi.number().allow(null),
+      priceMatch: Joi.number().allow(null),
       discounts: Joi.array().items(Joi.string().valid(...Object.values(Discounts))),
       surcharges: Joi.array().items(Joi.string().valid(...Object.values(Surcharges))),
       coverages: Joi.array().items(Joi.string().valid(...Object.values(Coverages)))

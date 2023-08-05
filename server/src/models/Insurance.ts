@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { Discounts, Surcharges, Coverages } from './Configuration';
+import { ConfigurationTransformation } from '../utils/utils';
 
 export interface IInsurance {
   name: string;
@@ -8,9 +9,10 @@ export interface IInsurance {
   vehiclePower: number;
   voucher?: number;
   priceMatch?: number;
-  discounts?: Discounts[];
-  surcharges?: Surcharges[];
-  coverages?: Coverages[];
+  discounts?: ConfigurationTransformation[];
+  surcharges?: ConfigurationTransformation[];
+  coverages?: ConfigurationTransformation[];
+  basePrice?: Number;
   totalPrice?: Number;
 }
 
@@ -44,8 +46,15 @@ const InsuranceSchema: Schema = new Schema({
   discounts: {
     type: [
       {
-        type: String,
-        enum: [...Object.values(Discounts)]
+        type: {
+          name: {
+            type: String,
+            enum: Object.values(Discounts)
+          },
+          amount: {
+            type: Number
+          }
+        }
       }
     ],
     default: []
@@ -53,8 +62,15 @@ const InsuranceSchema: Schema = new Schema({
   surcharges: {
     type: [
       {
-        type: String,
-        enum: [...Object.values(Surcharges)]
+        type: {
+          name: {
+            type: String,
+            enum: Object.values(Surcharges)
+          },
+          amount: {
+            type: Number
+          }
+        }
       }
     ],
     default: []
@@ -62,11 +78,22 @@ const InsuranceSchema: Schema = new Schema({
   coverages: {
     type: [
       {
-        type: String,
-        enum: [...Object.values(Coverages)]
+        type: {
+          name: {
+            type: String,
+            enum: Object.values(Coverages)
+          },
+          amount: {
+            type: Number
+          }
+        }
       }
     ],
     default: []
+  },
+  basePrice: {
+    type: Number,
+    required: true
   },
   totalPrice: {
     type: Number,

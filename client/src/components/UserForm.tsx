@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Container, Box, Grid, TextField, Typography, InputAdornment } from '@mui/material';
-import styled from 'styled-components';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 interface StyledInputWithLabel {
   label: string;
@@ -26,6 +27,7 @@ const StyledInputWithLabel: React.FC<StyledInputWithLabel> = ({ label, name, typ
 );
 
 const UserForm = (): JSX.Element => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   return (
     <Container sx={{ mt: 3 }}>
       <Typography mb={3} fontSize={26}>
@@ -41,6 +43,9 @@ const UserForm = (): JSX.Element => {
           <StyledInputWithLabel label="Price match" name="priceMatch" type="number" isPriceField />
         </Grid>
       </Box>
+      <LoadingButton variant="outlined" loading={isLoading}>
+        Save
+      </LoadingButton>
     </Container>
   );
 };

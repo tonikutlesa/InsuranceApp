@@ -5,7 +5,6 @@ type CoveragesListProps = {
 };
 
 const CoveragesList: React.FC<CoveragesListProps> = ({ isSmallerScreen }): JSX.Element => {
-  console.log(isSmallerScreen);
   const checkboxItems = [{ label: 'Bonus protection' }, { label: 'AO+' }, { label: 'Glass coverage' }];
 
   return (

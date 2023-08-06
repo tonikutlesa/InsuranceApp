@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { selectCurrentInsurance, resetCurrentInsurance } from '../store/slices/currentInsuranceSlice';
+import { useState } from 'react';
+import { selectCurrentInsurance } from '../store/slices/currentInsuranceSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -60,7 +60,7 @@ const UserForm = (): JSX.Element => {
   const formik = useFormik({
     initialValues: {
       name: currentInsurance.name,
-      birthdate: currentInsurance.birthdate,
+      birthdate: currentInsurance.birthdate?.slice(0, 10),
       city: currentInsurance.city,
       vehiclePower: currentInsurance.vehiclePower,
       voucher: currentInsurance.voucher || '',
@@ -88,16 +88,6 @@ const UserForm = (): JSX.Element => {
       setIsLoading(false);
     }
   });
-
-  const resetCurrentInsuranceCallback = useCallback(() => {
-    dispatch(resetCurrentInsurance());
-  }, [dispatch]);
-
-  useEffect(() => {
-    return () => {
-      resetCurrentInsuranceCallback();
-    };
-  }, [resetCurrentInsuranceCallback]);
 
   return (
     <Container sx={{ mt: 3 }}>

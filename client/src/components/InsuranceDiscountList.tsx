@@ -1,6 +1,9 @@
 import { Container, Checkbox, FormControlLabel, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { selectCurrentInsurance } from '../store/slices/currentInsuranceSlice';
 
 const InsuranceDiscountList = (): JSX.Element => {
+  const currentInsurance = useSelector(selectCurrentInsurance);
   const checkboxItems = [{ label: 'Commercial discount' }, { label: 'Agent discount' }, { label: 'Summer discount' }, { label: 'Strong car surcharge' }];
 
   return (
@@ -18,7 +21,7 @@ const InsuranceDiscountList = (): JSX.Element => {
         <FormControlLabel key={item.label} control={<Checkbox />} label={item.label} sx={{ mr: 5 }} />
       ))}
       <Typography mt={0.8} fontSize={22}>
-        Total price: <b>42</b>
+        Total price: <b>{currentInsurance.totalPrice}</b>
       </Typography>
     </Container>
   );

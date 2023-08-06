@@ -3,6 +3,8 @@ import AddInsurancePage from './pages/AddInsurancePage';
 import InsuranceListPage from './pages/InsuranceListPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ROUTES } from './routes';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const App = (): JSX.Element => {
   return (
@@ -16,4 +18,10 @@ const App = (): JSX.Element => {
   );
 };
 
-export default App;
+const AppWrapper = (): JSX.Element => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+
+export default AppWrapper;

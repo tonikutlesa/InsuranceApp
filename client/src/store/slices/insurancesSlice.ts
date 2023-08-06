@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
-interface Configuration {
+export interface Configuration {
   name: string;
   amount: number;
 }
@@ -10,11 +10,11 @@ interface Configuration {
 export interface Insurance {
   id: string;
   name: string;
-  birthdate: Date;
+  birthdate: string;
   city: string;
   vehiclePower: number;
-  voucher: number;
-  priceMatch: number;
+  voucher: number | null;
+  priceMatch: number | null;
   discounts: Configuration[];
   surcharges: Configuration[];
   coverages: Configuration[];
@@ -22,7 +22,7 @@ export interface Insurance {
   totalPrice: number;
 }
 
-interface InsurancesSliceState {
+export interface InsurancesSliceState {
   insurances: Insurance[];
 }
 
@@ -34,14 +34,14 @@ export const insurancesSlice = createSlice({
   name: 'insurances',
   initialState,
   reducers: {
-    setInsurances: (state, action: PayloadAction<InsurancesSliceState>) => {
-      state = action.payload;
+    setInsurances: (state, action: PayloadAction<Insurance[]>) => {
+      state.insurances = action.payload;
     }
   }
 });
 
 export const { setInsurances } = insurancesSlice.actions;
 
-export const selectInsurances = (state: RootState) => state.insurances;
+export const selectInsurances = (state: RootState) => state.insurances.insurances;
 
 export default insurancesSlice;

@@ -1,24 +1,26 @@
+import { useSelector } from 'react-redux';
+import { Insurance, selectInsurances } from '../store/slices/insurancesSlice';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Configuration } from '../store/slices/insurancesSlice';
 
-function createData(
-  name: string,
-  birthdate: Date,
-  city: string,
-  vehiclePower: number,
-  voucher: number,
-  priceMatch: number | null,
-  discounts: string[],
-  surcharges: string[],
-  coverages: string[],
-  basePrice: number,
-  totalPrice: number
-) {
-  return { name, birthdate, city, vehiclePower, voucher, priceMatch, discounts, surcharges, coverages, basePrice, totalPrice };
-}
+const InsuranceTable = (): JSX.Element => {
+  const insurances: Insurance[] = useSelector(selectInsurances);
+  const rows = insurances.map((insurance) =>
+    createData(
+      insurance.name,
+      insurance.birthdate,
+      insurance.city,
+      insurance.vehiclePower,
+      insurance.voucher,
+      insurance.priceMatch,
+      insurance.discounts,
+      insurance.surcharges,
+      insurance.coverages,
+      insurance.basePrice,
+      insurance.totalPrice
+    )
+  );
 
-const rows = [createData('Toni Kutlesa', new Date(), 'Split', 60, 20, null, ['VIP discount,', 'Commercial discount'], [], [], 400, 700)];
-
-export default function InsuranceTable() {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -43,14 +45,14 @@ export default function InsuranceTable() {
               <TableCell component="th" scope="row" align="center">
                 {row.name}
               </TableCell>
-              <TableCell align="center">{row.birthdate.toISOString()}</TableCell>
+              <TableCell align="center">{row.birthdate.slice(0, 10)}</TableCell>
               <TableCell align="center">{row.city}</TableCell>
               <TableCell align="center">{row.vehiclePower}</TableCell>
               <TableCell align="center">{row.voucher ? row.voucher : '-'}</TableCell>
               <TableCell align="center">{row.priceMatch ? row.priceMatch : '-'}</TableCell>
-              <TableCell align="center">{row.discounts.length ? row.discounts : '-'}</TableCell>
-              <TableCell align="center">{row.surcharges.length ? row.surcharges : '-'}</TableCell>
-              <TableCell align="center">{row.coverages.length ? row.coverages : '-'}</TableCell>
+              <TableCell align="center">{row.discountNames.length ? row.discountNames : '-'}</TableCell>
+              <TableCell align="center">{row.surchargeNames.length ? row.surchargeNames : '-'}</TableCell>
+              <TableCell align="center">{row.coverageNames.length ? row.coverageNames : '-'}</TableCell>
               <TableCell align="center">{row.basePrice}</TableCell>
               <TableCell align="center">{row.totalPrice}</TableCell>
             </TableRow>
@@ -59,4 +61,25 @@ export default function InsuranceTable() {
       </Table>
     </TableContainer>
   );
+};
+
+function createData(
+  name: string,
+  birthdate: string,
+  city: string,
+  vehiclePower: number,
+  voucher: number | null,
+  priceMatch: number | null,
+  discounts: Configuration[],
+  surcharges: Configuration[],
+  coverages: Configuration[],
+  basePrice: number,
+  totalPrice: number
+) {
+  const discountNames = discounts.map((discount) => discount.name).join(', ');
+  const surchargeNames = surcharges.map((surcharge) => surcharge.name).join(', ');
+  const coverageNames = coverages.map((coverage) => coverage.name).join(', ');
+  return { name, birthdate, city, vehiclePower, voucher, priceMatch, discountNames, surchargeNames, coverageNames, basePrice, totalPrice };
 }
+
+export default InsuranceTable;

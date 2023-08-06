@@ -11,11 +11,11 @@ const initialState: CurrentInsuranceSliceState = {
   currentInsurance: {
     id: '',
     name: '',
-    birthdate: new Date(),
+    birthdate: '',
     city: '',
     vehiclePower: 0,
-    voucher: 0,
-    priceMatch: 0,
+    voucher: null,
+    priceMatch: null,
     discounts: [],
     surcharges: [],
     coverages: [],
@@ -36,6 +36,6 @@ export const currentInsuranceSlice = createSlice({
 
 export const { setCurrentInsurance } = currentInsuranceSlice.actions;
 
-export const selectCurrentInsurance = (state: RootState) => state.currentInsurance;
+export const selectCurrentInsurance = (state: RootState) => state.currentInsurance.currentInsurance;
 
 export default insurancesSlice;

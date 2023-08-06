@@ -1,5 +1,7 @@
+import InsuranceTable from '../components/InsuranceTable';
+
 const InsuranceListPage = (): JSX.Element => {
-  return <>Insurance list</>;
+  return <InsuranceTable />;
 };
 
 export default InsuranceListPage;

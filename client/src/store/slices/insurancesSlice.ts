@@ -8,7 +8,7 @@ export interface Configuration {
 }
 
 export interface Insurance {
-  id: string;
+  _id: string;
   name: string;
   birthdate: string;
   city: string;

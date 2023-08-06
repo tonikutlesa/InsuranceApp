@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { selectCurrentInsurance } from '../store/slices/currentInsuranceSlice';
 import InsuranceDiscountList from '../components/InsuranceDiscountList';
 import CoveragesList from '../components/CoveragesList';
 import UserForm from '../components/UserForm';
 import { Container, Box, Grid } from '@mui/material';
 
 const AddInsurancePage = (): JSX.Element => {
+  const currentInsurance = useSelector(selectCurrentInsurance);
+  const isExistingInsurance = currentInsurance._id;
+
   const breakpoint = 650;
   const [isSmallerScreen, setIsSmallerScreen] = useState<boolean>(window.innerWidth < breakpoint);
 
@@ -21,15 +26,17 @@ const AddInsurancePage = (): JSX.Element => {
 
   return (
     <>
-      <InsuranceDiscountList />
+      {isExistingInsurance && <InsuranceDiscountList />}
       {isSmallerScreen ? (
         <Grid container spacing={2} direction={isSmallerScreen ? 'column-reverse' : 'row'}>
           <Grid item xs={12} md={6}>
             <UserForm />
           </Grid>
-          <Grid item xs={12} md={6}>
-            <CoveragesList isSmallerScreen={isSmallerScreen} />
-          </Grid>
+          {isExistingInsurance && (
+            <Grid item xs={12} md={6}>
+              <CoveragesList isSmallerScreen={isSmallerScreen} />
+            </Grid>
+          )}
         </Grid>
       ) : (
         <Container
@@ -43,9 +50,11 @@ const AddInsurancePage = (): JSX.Element => {
           <Box>
             <UserForm />
           </Box>
-          <Box>
-            <CoveragesList isSmallerScreen={isSmallerScreen} />
-          </Box>
+          {isExistingInsurance && (
+            <Box>
+              <CoveragesList isSmallerScreen={isSmallerScreen} />
+            </Box>
+          )}
         </Container>
       )}
     </>

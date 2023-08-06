@@ -9,7 +9,7 @@ interface CurrentInsuranceSliceState {
 
 const initialState: CurrentInsuranceSliceState = {
   currentInsurance: {
-    id: '',
+    _id: '',
     name: '',
     birthdate: '',
     city: '',
@@ -28,13 +28,16 @@ export const currentInsuranceSlice = createSlice({
   name: 'currentInsurance',
   initialState,
   reducers: {
-    setCurrentInsurance: (state, action: PayloadAction<CurrentInsuranceSliceState>) => {
-      state = action.payload;
+    setCurrentInsurance: (state, action: PayloadAction<Insurance>) => {
+      state.currentInsurance = action.payload;
+    },
+    resetCurrentInsurance: (state) => {
+      state.currentInsurance = { ...initialState.currentInsurance };
     }
   }
 });
 
-export const { setCurrentInsurance } = currentInsuranceSlice.actions;
+export const { setCurrentInsurance, resetCurrentInsurance } = currentInsuranceSlice.actions;
 
 export const selectCurrentInsurance = (state: RootState) => state.currentInsurance.currentInsurance;
 

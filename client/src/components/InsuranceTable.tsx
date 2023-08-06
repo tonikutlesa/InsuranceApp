@@ -7,6 +7,7 @@ const InsuranceTable = (): JSX.Element => {
   const insurances: Insurance[] = useSelector(selectInsurances);
   const rows = insurances.map((insurance) =>
     createData(
+      insurance._id,
       insurance.name,
       insurance.birthdate,
       insurance.city,
@@ -41,7 +42,7 @@ const InsuranceTable = (): JSX.Element => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            <TableRow key={row._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row" align="center">
                 {row.name}
               </TableCell>
@@ -64,6 +65,7 @@ const InsuranceTable = (): JSX.Element => {
 };
 
 function createData(
+  _id: string,
   name: string,
   birthdate: string,
   city: string,
@@ -79,7 +81,7 @@ function createData(
   const discountNames = discounts.map((discount) => discount.name).join(', ');
   const surchargeNames = surcharges.map((surcharge) => surcharge.name).join(', ');
   const coverageNames = coverages.map((coverage) => coverage.name).join(', ');
-  return { name, birthdate, city, vehiclePower, voucher, priceMatch, discountNames, surchargeNames, coverageNames, basePrice, totalPrice };
+  return { _id, name, birthdate, city, vehiclePower, voucher, priceMatch, discountNames, surchargeNames, coverageNames, basePrice, totalPrice };
 }
 
 export default InsuranceTable;

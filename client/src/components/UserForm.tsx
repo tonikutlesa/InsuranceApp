@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { selectCurrentInsurance } from '../store/slices/currentInsuranceSlice';
+import { resetCurrentInsurance, selectCurrentInsurance } from '../store/slices/currentInsuranceSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Container, Box, Grid, TextField, Typography, InputAdornment } from '@mui/material';
+import { Container, Box, Grid, TextField, Typography, InputAdornment, Button } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { setCurrentInsuranceStateOnCreate, updateCurrentInsuranceState } from '../api';
 import { selectCurrentSelectedDiscounts, selectCurrentSelectedSurcharges, selectCurrentSelectedCoverages } from '../store/slices/currentInsuranceSlice';
@@ -60,6 +60,12 @@ const UserForm = (): JSX.Element => {
   const currentSelectedSurcharges = useSelector(selectCurrentSelectedSurcharges);
   const currentSelectedCoverages = useSelector(selectCurrentSelectedCoverages);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const isExistingInsurance = currentInsurance._id;
+
+  const handleAddNewInsuranceButtonClick = () => {
+    dispatch(resetCurrentInsurance());
+    formik.resetForm();
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -159,13 +165,18 @@ const UserForm = (): JSX.Element => {
             formik.handleSubmit();
           }}
           disabled={Object.keys(formik.touched).length === 0 || Object.keys(formik.errors).length > 0}
-          variant="outlined"
+          variant="contained"
           loading={isLoading}
           sx={{ marginLeft: '120px' }}
         >
           Save
         </LoadingButton>
       </Box>
+      {isExistingInsurance && (
+        <Button variant="outlined" onClick={handleAddNewInsuranceButtonClick} sx={{ marginTop: 4 }}>
+          Add new insurance
+        </Button>
+      )}
     </Container>
   );
 };

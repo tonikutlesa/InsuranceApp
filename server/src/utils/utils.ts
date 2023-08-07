@@ -40,33 +40,23 @@ const calculateInsurancePrice = async (
   let totalPrice = basePrice;
 
   initialCoverages.forEach((coverage) => {
-    if (coverage === COVERAGES.BONUS_PROTECTION) {
-      const amount: number = basePrice * Number(transformedConfigurations[coverage].percentageValue);
-      totalPrice += amount;
-      if (amount) {
-        coverages.push({
-          name: COVERAGES.BONUS_PROTECTION,
-          amount
-        });
-      }
-    } else if (coverage === COVERAGES.GLASS_PROTECTION) {
-      const amount = vehiclePower * Number(transformedConfigurations[coverage].percentageValue);
-      totalPrice += amount;
-      if (amount) {
-        coverages.push({
-          name: COVERAGES.GLASS_PROTECTION,
-          amount
-        });
-      }
-    } else if (coverage === COVERAGES.AO_PLUS) {
-      const amount = Number(userAge < 30 ? transformedConfigurations[coverage].fixedValue?.min : transformedConfigurations[coverage].fixedValue?.max);
-      totalPrice += amount;
-      if (amount) {
-        coverages.push({
-          name: COVERAGES.AO_PLUS,
-          amount
-        });
-      }
+    let amount: number;
+    switch (coverage) {
+      case COVERAGES.BONUS_PROTECTION:
+        amount = basePrice * Number(transformedConfigurations[coverage].percentageValue);
+        break;
+      case COVERAGES.GLASS_PROTECTION:
+        amount = vehiclePower * Number(transformedConfigurations[coverage].percentageValue);
+        break;
+      case COVERAGES.AO_PLUS:
+        amount = Number(userAge < 30 ? transformedConfigurations[coverage].fixedValue?.min : transformedConfigurations[coverage].fixedValue?.max);
+        break;
+      default:
+        amount = 0;
+    }
+    totalPrice += amount;
+    if (amount) {
+      coverages.push({ name: coverage, amount });
     }
   });
 

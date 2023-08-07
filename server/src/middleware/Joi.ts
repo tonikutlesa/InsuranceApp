@@ -5,6 +5,10 @@ import { IConfiguration } from '../models/Configuration';
 import Logger from '../utils/Logger';
 import { Discounts, Surcharges, Coverages } from '../models/Configuration';
 
+interface IInsuranceWithId extends IInsurance {
+  _id: string;
+}
+
 export const ValidateJoi = (schema: ObjectSchema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,7 +25,8 @@ export const ValidateJoi = (schema: ObjectSchema) => {
 
 export const Schemas = {
   insurance: {
-    upsert: Joi.object<IInsurance>({
+    upsert: Joi.object<IInsuranceWithId>({
+      _id: Joi.string(),
       name: Joi.string().required(),
       birthdate: Joi.date().required(),
       city: Joi.string().required(),

@@ -16,7 +16,7 @@ const InsuranceListPage = (): JSX.Element => {
   }, [dispatch]);
 
   useEffect(() => {
-    resetCurrentInsuranceCallback;
+    resetCurrentInsuranceCallback();
     setInsurancesStateCallback();
   }, [setInsurancesStateCallback, resetCurrentInsuranceCallback]);
 

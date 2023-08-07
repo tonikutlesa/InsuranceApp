@@ -15,6 +15,10 @@ export const createNewInsurance = async (data: Partial<Insurance>) => {
   return await axios.put(INSURANCES_URL, data);
 };
 
+export const updateInsurance = async (data: Partial<Insurance>) => {
+  return await axios.put(`${INSURANCES_URL}/${data._id}`, data);
+};
+
 export const setInsurancesState = async (dispatch: Dispatch) => {
   try {
     const insurancesList = await getAllInsurances();
@@ -28,6 +32,15 @@ export const setCurrentInsuranceStateOnCreate = async (dispatch: Dispatch, data:
   try {
     const newInsurance = await createNewInsurance(data);
     dispatch(setCurrentInsurance(newInsurance.data.data));
+  } catch (error) {
+    console.error('Error fetching insurances:', error);
+  }
+};
+
+export const updateCurrentInsuranceState = async (dispatch: Dispatch, data: Partial<Insurance>) => {
+  try {
+    const updatedInsurance = await updateInsurance(data);
+    dispatch(setCurrentInsurance(updatedInsurance.data.data));
   } catch (error) {
     console.error('Error fetching insurances:', error);
   }

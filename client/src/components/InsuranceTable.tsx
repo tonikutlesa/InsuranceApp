@@ -72,15 +72,15 @@ function createData(
   vehiclePower: number,
   voucher: number | null,
   priceMatch: number | null,
-  discounts: Configuration[],
-  surcharges: Configuration[],
-  coverages: Configuration[],
+  discounts: (string | Configuration)[],
+  surcharges: (string | Configuration)[],
+  coverages: (string | Configuration)[],
   basePrice: number,
   totalPrice: number
 ) {
-  const discountNames = discounts.map((discount) => discount.name).join(', ');
-  const surchargeNames = surcharges.map((surcharge) => surcharge.name).join(', ');
-  const coverageNames = coverages.map((coverage) => coverage.name).join(', ');
+  const discountNames = discounts.map((discount) => (typeof discount === 'string' ? discount : discount.name)).join(', ');
+  const surchargeNames = surcharges.map((surcharge) => (typeof surcharge === 'string' ? surcharge : surcharge.name)).join(', ');
+  const coverageNames = coverages.map((coverage) => (typeof coverage === 'string' ? coverage : coverage.name)).join(', ');
   return { _id, name, birthdate, city, vehiclePower, voucher, priceMatch, discountNames, surchargeNames, coverageNames, basePrice, totalPrice };
 }
 

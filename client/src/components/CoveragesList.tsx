@@ -1,11 +1,20 @@
 import { Container, Checkbox, FormControlLabel, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { COVERAGES } from '../constants';
+import { addCoverage, removeCoverage, selectCurrentSelectedCoverages } from '../store/slices/currentInsuranceSlice';
 
 type CoveragesListProps = {
   isSmallerScreen: boolean;
 };
 
 const CoveragesList: React.FC<CoveragesListProps> = ({ isSmallerScreen }): JSX.Element => {
-  const checkboxItems = [{ label: 'Bonus protection' }, { label: 'AO+' }, { label: 'Glass coverage' }];
+  const dispatch = useDispatch();
+  const currentSelectedSurcharges = useSelector(selectCurrentSelectedCoverages);
+  const selectedCoverages = currentSelectedSurcharges.map((coverage) => coverage);
+
+  const handleCoverageToggle = (label: string) => {
+    selectedCoverages.includes(label) ? dispatch(removeCoverage(label)) : dispatch(addCoverage(label));
+  };
 
   return (
     <Container
@@ -20,8 +29,13 @@ const CoveragesList: React.FC<CoveragesListProps> = ({ isSmallerScreen }): JSX.E
       <Typography fontSize={26} mt={4}>
         <b>Coverages</b>
       </Typography>
-      {checkboxItems.map((item) => (
-        <FormControlLabel key={item.label} control={<Checkbox />} label={item.label} sx={{ mr: 5 }} />
+      {COVERAGES.map((coverage) => (
+        <FormControlLabel
+          key={coverage.label}
+          control={<Checkbox checked={selectedCoverages.includes(coverage.label)} onChange={() => handleCoverageToggle(coverage.label)} />}
+          label={coverage.label}
+          sx={{ mr: 5 }}
+        />
       ))}
     </Container>
   );

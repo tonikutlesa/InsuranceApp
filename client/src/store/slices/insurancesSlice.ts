@@ -15,9 +15,9 @@ export interface Insurance {
   vehiclePower: number;
   voucher: number | null;
   priceMatch: number | null;
-  discounts: Configuration[];
-  surcharges: Configuration[];
-  coverages: Configuration[];
+  discounts: Configuration[] | string[];
+  surcharges: Configuration[] | string[];
+  coverages: Configuration[] | string[];
   basePrice: number;
   totalPrice: number;
 }

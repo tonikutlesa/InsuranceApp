@@ -5,7 +5,8 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Container, Box, Grid, TextField, Typography, InputAdornment } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { setCurrentInsuranceStateOnCreate } from '../api';
+import { setCurrentInsuranceStateOnCreate, updateCurrentInsuranceState } from '../api';
+import { selectCurrentSelectedDiscounts, selectCurrentSelectedSurcharges, selectCurrentSelectedCoverages } from '../store/slices/currentInsuranceSlice';
 
 interface StyledInputWithLabel {
   label: string;
@@ -55,6 +56,9 @@ const validationSchema = yup.object({
 const UserForm = (): JSX.Element => {
   const dispatch = useDispatch();
   const currentInsurance = useSelector(selectCurrentInsurance);
+  const currentSelectedDiscounts = useSelector(selectCurrentSelectedDiscounts);
+  const currentSelectedSurcharges = useSelector(selectCurrentSelectedSurcharges);
+  const currentSelectedCoverages = useSelector(selectCurrentSelectedCoverages);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formik = useFormik({
@@ -71,7 +75,18 @@ const UserForm = (): JSX.Element => {
       setIsLoading(true);
 
       if (currentInsurance._id) {
-        console.log('ima');
+        updateCurrentInsuranceState(dispatch, {
+          _id: currentInsurance._id,
+          name: values.name,
+          birthdate: values.birthdate,
+          city: values.city,
+          vehiclePower: values.vehiclePower,
+          voucher: values.voucher ? Number(values.voucher) : null,
+          priceMatch: values.priceMatch ? Number(values.priceMatch) : null,
+          discounts: currentSelectedDiscounts,
+          surcharges: currentSelectedSurcharges,
+          coverages: currentSelectedCoverages
+        });
       } else {
         await setCurrentInsuranceStateOnCreate(dispatch, {
           name: values.name,

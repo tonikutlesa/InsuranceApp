@@ -10,8 +10,8 @@ import {
   removeSurcharge,
   selectCurrentSelectedCoverages
 } from '../store/slices/currentInsuranceSlice';
-import { DISCOUNTS, SURCHARGES } from '../constants';
-import { useEffect } from 'react';
+import { DISCOUNT_CHECKBOX_LABELS, SURCHARGE_CHECKBOX_LABELS, DISCOUNTS, SURCHARGES } from '../constants';
+import { useEffect, useCallback } from 'react';
 import { updateCurrentInsuranceState } from '../api';
 
 const InsuranceDiscountList: React.FC = () => {
@@ -58,6 +58,27 @@ const InsuranceDiscountList: React.FC = () => {
     currentInsurance.priceMatch
   ]);
 
+  const checkCheckboxDependencies = useCallback(() => {
+    const hasStrongCarSurcharge = currentSelectedSurcharges.includes(SURCHARGES.STRONG_CAR_SURCHARGE);
+    if (currentInsurance.vehiclePower > 100 && !hasStrongCarSurcharge) {
+      dispatch(addSurcharge(SURCHARGES.STRONG_CAR_SURCHARGE));
+    } else if (currentInsurance.vehiclePower <= 100 && hasStrongCarSurcharge) {
+      dispatch(removeSurcharge(SURCHARGES.STRONG_CAR_SURCHARGE));
+    }
+
+    if (currentSelectedDiscounts.includes(DISCOUNTS.VIP_DISCOUNT) && currentInsurance.vehiclePower <= 80) {
+      dispatch(removeDiscount(DISCOUNTS.VIP_DISCOUNT));
+    }
+
+    if (currentSelectedDiscounts.includes(DISCOUNTS.ADVISER_DISCOUNT) && currentSelectedCoverages.length < 2) {
+      dispatch(removeDiscount(DISCOUNTS.ADVISER_DISCOUNT));
+    }
+  }, [dispatch, currentSelectedSurcharges, currentInsurance.vehiclePower, currentSelectedDiscounts, currentSelectedCoverages.length]);
+
+  useEffect(() => {
+    checkCheckboxDependencies();
+  }, [checkCheckboxDependencies]);
+
   return (
     <Container
       sx={{
@@ -69,17 +90,19 @@ const InsuranceDiscountList: React.FC = () => {
         backgroundColor: 'lightgray'
       }}
     >
-      {DISCOUNTS.map((discount) => (
+      {DISCOUNT_CHECKBOX_LABELS.map((discount) => (
         <FormControlLabel
           key={discount.label}
+          disabled={(discount.label === DISCOUNTS.ADVISER_DISCOUNT && currentSelectedCoverages.length < 2) || (discount.label === DISCOUNTS.VIP_DISCOUNT && currentInsurance.vehiclePower <= 80)}
           control={<Checkbox checked={selectedDiscounts.includes(discount.label)} onChange={() => handleDiscountToggle(discount.label)} />}
           label={discount.label}
           sx={{ mr: 5 }}
         />
       ))}
-      {SURCHARGES.map((surcharge) => (
+      {SURCHARGE_CHECKBOX_LABELS.map((surcharge) => (
         <FormControlLabel
           key={surcharge.label}
+          disabled={surcharge.label === SURCHARGES.STRONG_CAR_SURCHARGE ? true : false}
           control={<Checkbox checked={selectedSurcharges.includes(surcharge.label)} onChange={() => handleSurchargeToggle(surcharge.label)} />}
           label={surcharge.label}
           sx={{ mr: 5 }}

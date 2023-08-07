@@ -135,8 +135,8 @@ const calculateInsurancePrice = async (
   }
 
   return {
-    calculatedBasePrice: basePrice,
-    calculatedTotalPrice: totalPrice,
+    calculatedBasePrice: parseFloat(basePrice.toFixed(2)),
+    calculatedTotalPrice: parseFloat(totalPrice.toFixed(2)),
     calculatedDiscounts: discounts,
     calculatedCoverages: coverages,
     calculatedSurcharges: surcharges

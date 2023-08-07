@@ -109,7 +109,7 @@ const InsuranceDiscountList: React.FC = () => {
         />
       ))}
       <Typography mt={0.8} fontSize={22}>
-        Total price: <b>{currentInsurance.totalPrice}</b>
+        Total price: <b>{currentInsurance.totalPrice >= 0 ? currentInsurance.totalPrice : 0}</b>
       </Typography>
     </Container>
   );

@@ -92,6 +92,7 @@ const calculateInsurancePrice = async (
         name: DISCOUNTS.ADVISER_DISCOUNT,
         amount: adviserDiscountSum
       });
+      totalPrice -= adviserDiscountSum;
     }
   });
 
@@ -113,7 +114,7 @@ const calculateInsurancePrice = async (
   initialDiscounts.forEach((discount) => {
     if (discount === DISCOUNTS.VIP_DISCOUNT) {
       const amount: number = baseTotalPrice * Number(transformedConfigurations[discount].percentageValue);
-      totalPrice += amount;
+      totalPrice -= amount;
       if (amount) {
         discounts.push({
           name: DISCOUNTS.VIP_DISCOUNT,

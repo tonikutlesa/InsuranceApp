@@ -44,7 +44,9 @@ export const currentInsuranceSlice = createSlice({
       state.selectedCoverages = [];
     },
     addDiscount: (state, action: PayloadAction<string>) => {
-      state.selectedDiscounts.push(action.payload);
+      if (!state.selectedDiscounts.includes(action.payload)) {
+        state.selectedDiscounts.push(action.payload);
+      }
     },
     removeDiscount: (state, action: PayloadAction<string>) => {
       const index = state.selectedDiscounts.findIndex((discount) => discount === action.payload);
@@ -54,7 +56,9 @@ export const currentInsuranceSlice = createSlice({
       }
     },
     addSurcharge: (state, action: PayloadAction<string>) => {
-      state.selectedSurcharges.push(action.payload);
+      if (!state.selectedSurcharges.includes(action.payload)) {
+        state.selectedSurcharges.push(action.payload);
+      }
     },
     removeSurcharge: (state, action: PayloadAction<string>) => {
       const index = state.selectedSurcharges.findIndex((surcharge) => surcharge === action.payload);
@@ -64,7 +68,9 @@ export const currentInsuranceSlice = createSlice({
       }
     },
     addCoverage: (state, action: PayloadAction<string>) => {
-      state.selectedCoverages.push(action.payload);
+      if (!state.selectedCoverages.includes(action.payload)) {
+        state.selectedCoverages.push(action.payload);
+      }
     },
     removeCoverage: (state, action: PayloadAction<string>) => {
       const index = state.selectedCoverages.findIndex((coverage) => coverage === action.payload);

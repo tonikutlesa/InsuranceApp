@@ -7,6 +7,7 @@ import { Container, Box, Grid, TextField, Typography, InputAdornment, Button } f
 import LoadingButton from '@mui/lab/LoadingButton';
 import { setCurrentInsuranceStateOnCreate, updateCurrentInsuranceState } from '../api';
 import { selectCurrentSelectedDiscounts, selectCurrentSelectedSurcharges, selectCurrentSelectedCoverages } from '../store/slices/currentInsuranceSlice';
+import PriceList from './PriceDetails';
 
 interface StyledInputWithLabel {
   label: string;
@@ -173,9 +174,12 @@ const UserForm = (): JSX.Element => {
         </LoadingButton>
       </Box>
       {isExistingInsurance && (
-        <Button variant="outlined" onClick={handleAddNewInsuranceButtonClick} sx={{ marginTop: 4 }}>
-          Add new insurance
-        </Button>
+        <>
+          <PriceList />
+          <Button variant="outlined" onClick={handleAddNewInsuranceButtonClick} sx={{ marginTop: 4 }}>
+            Add new insurance
+          </Button>
+        </>
       )}
     </Container>
   );
